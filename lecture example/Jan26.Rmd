@@ -1,0 +1,20 @@
+---
+title: "Jan26"
+author: "Xuanpei Ouyang"
+date: "1/26/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, fig.keep='all'}
+X = as.matrix(mtcars)
+svd_X = svd(X)
+U = svd_X$u
+V = svd_X$v
+D = diag(svd_X$d)
+plot(U[,1],U[,2])
+text(U[,1],U[,2],rownames(mtcars))
+```
