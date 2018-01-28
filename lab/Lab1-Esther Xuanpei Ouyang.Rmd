@@ -2,7 +2,9 @@
 title: "Lab1 - Esther Xuanpei Ouyang"
 author: "Esther Xuanpei Ouyang"
 date: "1/22/2018"
-output: pdf_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -107,22 +109,36 @@ mtrace(YXt)
 
 #### Proof for Trace
 
-1. $tr(A+B)=tr(A)+tr(B)$
+##### 1. $tr(A+B)=tr(A)+tr(B)$
 
 Suppose $A$, $B$ are both square matrix with dimention n x n.
 Let $C=A+B$, then from the definition of matrix addition, $c_{ij} = a_{ij}+b_{ij}$.
 By the definition of trace, $$tr(A)+tr(B) \\ =\sum_{i=1}^n a_{ii}+\sum_{i=1}^n b_{ii} \\ =\sum_{i=1}^n a_{ii} + b_{ii} = \sum_{i=1}^nc_ii \text{  (definition of matrix addition)} \\ = tr(C)$$
 
-2. $tr(cA) = c \times tr(A)$, where c is a scalar.
+##### 2. $tr(cA) = c \times tr(A)$, where c is a scalar.
 Suppose $A$, $B$ are both square matrix with dimention n x n.
 Let $D=cA$, then from the definition of scalar matrix multiplication, $d_{ij} = c\times a_{ij}$.
 By the definition of trace, $$tr(cA) \\ =\sum_{i=1}^n c\times a_{ii} \\ =c \times \sum_{i=1}^n a_{ii} \text{  (take c out of the summation form since c is a scalar)} \\ = c \times tr(A)$$
 
-3. $tr(X^TY) = tr(XY^T) = tr(Y^TX) = tr(YX^T)$
-Suppose $X$, $Y$ are both square matrix with dimention n x n, 
-$$
+##### 3. $tr(X^TY) = tr(XY^T) = tr(Y^TX) = tr(YX^T)$
 
-$$
+Suppose $X$, $Y$ are both square matrix with dimension n x n, $X = \begin{bmatrix} x_{11} & \dots & x_{1n} \\ \vdots & \ddots & \vdots \\ x_{n1} & \dots & x_{nn}  \end{bmatrix} = \begin{bmatrix}  -  x_1 -\\  \vdots  \\  -x_{n}-  \end{bmatrix}, \text{where } x_i \text{ is the i row vector of X}$, $Y = \begin{bmatrix} \vert & & \vert \\ y_1  & \dots & v_2   \\ \vert & & \vert \end{bmatrix}, \text{where } y_i \text{ is the i column vector of Y}$
+
+First, we prove that $(AB)^T = B^TA^T$ by $$((AB)^T)_{ij} = (AB)_{ji} = \sum_k A_{jk}B_{ki} = \sum_k(A^T)_{kj}(B^T)_{ik} = \sum_k(B^T)_ik (A^T)_{kj} = (B^TA^T)_{ij} \text{(1)}$$
+Then, we prove that $tr(A) = tr(A^T)$ by $$tr(A) = \sum_{i=1}^n a_{ii} = tr(A)^T  \text{since tranpose does not change the numbers on the diagonal values } a_{ii} \text{(2)}$$
+
+Last, suppose $C$,$D$ are both sqaure matrix with dimension n x n, we prove that $tr(CD) = tr(DC)$ by 
+By definition of matrix-matrix multiplication, $A_{ij}=x_i^Ty_j$, which means the inner product of the row-vector $x_i$ and the column-vector $y_j$.
+
+Therefore, 
+$$tr(CD)=tr(E) =\sum_{i=1}^nE_{ii} = \sum_{i=1}^nc_{i}^Td_{i}=\sum_{i=1}^nd_{i}^Tc_{i}=\sum_{i=1}^nF_{ii}=tr(F)=tr(DC) \text{ (3)}$$
+Let $A = X^TY$, by (1) and (2), $tr(A) = tr(A^T) \Rightarrow tr(X^TY) = tr((X^TY)^T) = tr(Y^TX)$.
+
+Let $B = XY^T$, by (1) and (2), $tr(B) = tr(B^T) \Rightarrow tr(XY^T) = tr((XY^T)^T) = tr(YX^T)$.
+
+By (3), $tr(X^TY) = tr(YX^T)$ and $tr(XY^T) = tr(Y^TX)$.
+
+Therefore,  $tr(X^TY) = tr(XY^T) = tr(Y^TX) = tr(YX^T)$.
 
 
 ## 2) Transformation and Scaling Operations
@@ -172,6 +188,7 @@ apply(scaled_M, 2, max)
 n = dim(mtcars)[1]
 Mcov = (t(Mc)%*%Mc)/(n-1)
 Mcov
+
 # Without using the function cor(), compute the correlation matrix of the variables in M: mpg, disp, hp, drat, and wt.
 standardize_M = scale(M) # variance = 1
 Mcor = (t(standardize_M)%*%standardize_M)/(n-1)
