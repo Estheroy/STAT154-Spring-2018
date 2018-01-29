@@ -156,6 +156,7 @@ apply(M, 2, mean)
 # Compute a matrix Mc of mean-centered data applying the function scale() on M (do NOT use the argument scale = TRUE).
 Mc = scale(M, scale = FALSE)
 Mc
+
 # Confirm that variables in Mc are mean-centered by calculating the vector of column-means 
 apply(Mc, 2, mean)
 

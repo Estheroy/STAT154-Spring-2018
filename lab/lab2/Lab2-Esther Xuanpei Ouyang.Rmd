@@ -1,0 +1,248 @@
+---
+title: "Lab2 Esther Xuanpei Ouyang"
+author: "Esther Xuanpei Ouyang"
+date: "1/29/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## SVD on raw data
+```{r}
+head(state.x77)
+
+svd_state77 = svd(state.x77)
+U77 = svd_state77$u
+U77
+D77 = diag(svd_state77$d)
+D77
+V77 = svd_state77$v
+V77
+
+reconstruct_state = U77%*%D77%*%t(V77)
+head(state.x77)
+head(reconstruct_state)
+all(abs(reconstruct_state - state.x77) < 0.01)
+```
+
+## SVD and best Rank-one Approximation
+```{r}
+state2 = state.x77[ ,c(1,2,3,4,5)]
+head(state2)
+
+svd_state2 = svd(state2)
+U2 = svd_state2$u
+U2
+D2 = svd_state2$d
+D2
+V2 = svd_state2$v
+V2
+
+sum_mat = matrix(0, dim(state2)[1], dim(state2)[2])
+for (i in 1:5) {
+  sum_mat = sum_mat + D2[i]*U2[ ,i]%*%t(V2[ ,i])
+}
+
+all(abs(sum_mat - state2) < 0.01)
+```
+
+## Using SVD output to visualize data
+
+```{r, fig.keep='all'}
+plot(U77[,1], U77[,2])
+text(U77[,1], U77[,2], rownames(state.x77))
+```
+
+```{r, fig.keep='all'}
+plot(V77[,1], V77[,2])
+text(V77[,1], V77[,2], colnames(state.x77))
+```
+
+## Eigenvalue Decomposition
+
+```{r}
+R = cor(state.x77)
+# EVD of correlation matrix
+evd = eigen(R) 
+names(evd)
+evd = eigen(R, symmetric = TRUE)
+
+eigenvalues = eigen(R, symmetric = TRUE, only.values = TRUE) 
+eigenvalues
+eigenvalues$values
+eigenvalues$vectors
+```
+
+## Inverse of covariance matrix
+```{r}
+# 1
+state77_mean = apply(state.x77, 2, mean)
+state77_mean
+X = sweep(state.x77, 2, state77_mean)
+X
+
+# Check
+all(X == scale(state.x77, scale = FALSE))
+
+# 2
+S = t(X)%*%X
+
+# 3
+n = dim(X)[1]
+sample_cov_matrix = t(X)%*%X/(n-1)
+cov_X = cov(X)
+all(sample_cov_matrix - cov_X < 0.01)
+
+
+# 4
+n_feature = dim(X)[2]
+ones = diag(1, n_feature)
+ones
+S_inv = solve(S, ones)
+S_inv
+
+# 5
+eigen_S = eigen(S)
+V = eigen_S$vectors
+Lambda = diag(eigen_S$values)
+all(abs(S - V%*%Lambda%*%t(V)) < 0.01)
+
+# 6
+Lambda_inv = diag(1/eigen_S$values)
+S_inv_reconstruct = V%*%Lambda_inv%*%t(V)
+all(abs(S_inv - S_inv_reconstruct) < 0.01)
+```
+
+
+## Power Method
+```{r}
+# square matrix
+A = matrix(c(2, 1, -12, -5), nrow = 2, ncol = 2)
+
+# starting vector
+w0 = c(1, 1)
+
+w_old = w0
+for (k in 1:4) {
+  w_new = A %*% w_old 
+  print(paste('iteration =', k))
+  print(w_new) 
+  cat("\n")
+  # update w_old 
+  w_old = w_new
+}
+```
+
+## Description of Power Method
+```{r}
+A = matrix(c(5, -14, 11, -4, 4, -4, 3, 6, -3), nrow = 3, ncol = 3)
+A
+
+lp_norm = function(x, p = 1) {
+  if (p == "max") {
+    return(max(abs(x)))
+  } else {
+    tot_sum = 0
+    for ( val in x ){
+      tot_sum = tot_sum + abs(val)^p
+    }
+    return(tot_sum^(1/p))
+  }
+}
+
+power = function(A, p) {
+  n = dim(A)[1]
+  prev_w = rep(1, n) 
+  curr_w = rep(1, n)
+  prev_s = 0
+  curr_s = 1
+  while (abs(prev_s - curr_s) > 0.01) {
+    prev_s = curr_s
+    prev_w = curr_w
+    tmp = A%*%prev_w
+    curr_s = lp_norm(tmp, p)
+    curr_w = (A%*%prev_w)/curr_s
+  }
+  ret = list("p_value" = prev_s, "p_vector" = prev_w)
+  return(ret)
+}
+
+p_eigen = power(A, "max")
+p_value = p_eigen$p_value
+p_vector = p_eigen$p_vector
+eigen_A = eigen(A)
+# compare eigenvalues
+p_value
+eigen_A$values
+domninant_eigenvalue = eigen_A$values[1]
+domninant_eigenvalue
+# compare eigenvectors
+p_vector
+eigen_A$vectors
+domninant_eigenvector = eigen_A$vectors[,1]
+domninant_eigenvector
+
+
+# Check
+estimate_lambda = (t(p_vector)%*%A%*%p_vector
+)/(t(p_vector)%*%p_vector)
+estimate_lambda
+```
+Get the dominant eigenvectors `r domninant_eigenvector` and eigenvalues `r domninant_eigenvalue`.
+
+## Other scaling options
+```{r}
+p_eigen = power(A, 2)
+p_value = p_eigen$p_value
+p_vector = p_eigen$p_vector
+eigen_A = eigen(A)
+# compare eigenvalues
+p_value
+eigen_A$values
+domninant_eigenvalue = eigen_A$values[1]
+domninant_eigenvalue
+# compare eigenvectors
+p_vector
+eigen_A$vectors
+domninant_eigenvector = eigen_A$vectors[,1]
+domninant_eigenvector
+
+
+# Check
+estimate_lambda = (t(p_vector)%*%A%*%p_vector
+)/(t(p_vector)%*%p_vector)
+estimate_lambda
+```
+Yes, still get the same dominant eigenvectors `r domninant_eigenvector` and eigenvalues `r domninant_eigenvalue`.
+
+## Deflation and more eigenvectors
+```{r}
+A_1 = A - domninant_eigenvalue*domninant_eigenvector%*%t(domninant_eigenvector)
+A_1
+
+p_eigen = power(A_1, 2)
+p_value = p_eigen$p_value
+p_vector = p_eigen$p_vector
+eigen_A = eigen(A_1)
+
+# compare eigenvalues
+p_value
+eigen_A$values
+domninant_eigenvalue = eigen_A$values[1]
+domninant_eigenvalue
+
+# compare eigenvectors
+p_vector
+eigen_A$vectors
+domninant_eigenvector = eigen_A$vectors[,1]
+domninant_eigenvector
+
+
+# Check
+estimate_lambda = (t(p_vector)%*%A_1%*%p_vector
+)/(t(p_vector)%*%p_vector)
+estimate_lambda
+```
+Get one more dominant eigenvectors `r domninant_eigenvector` and eigenvalues `r domninant_eigenvalue`.
