@@ -209,10 +209,11 @@ I</code></pre>
 <div id="b-every-nonsingular-matrix-is-orthogonal." class="section level4">
 <h4>(b) Every nonsingular matrix is orthogonal.</h4>
 <p>False.</p>
-<p>By the definition of orthogonal matrix, for for orthogonal matrix <span class="math inline">\(Q\)</span>, <span class="math inline">\(Q^TQ=QQ^T= I\)</span>. A counter-example is that the nonsingular matrix <span class="math inline">\(\begin{bmatrix} \end{bmatrix}\)</span> Therefore, not all nonsingular matrix is orthogonal.</p>
+<p>By the definition of orthogonal matrix, for for orthogonal matrix <span class="math inline">\(Q\)</span>, <span class="math inline">\(Q^TQ=QQ^T= I\)</span>. A counter-example is that the nonsingular matrix A is not orthogonal Therefore, not all nonsingular matrix is orthogonal.</p>
 </div>
 <div id="c-every-matrix-of-full-rank-is-square." class="section level4">
 <h4>(c) Every matrix of full rank is square.</h4>
+<p>False</p>
 <p>By the definition of rank, a matrix m by n matrix A is a full rank rank if its rank equals the largest possible for a matrix of the same dimensions, which is the lesser of the number of rows and columns, i.e., <span class="math inline">\(rank(A)=min(m,n)\)</span>. Some m by n rectangular matrix can have <span class="math inline">\(rank=min(m, n)\)</span> as long as it has all linearly indepedent vectors as its rows if <span class="math inline">\(m&lt;n\)</span> or columns if <span class="math inline">\(m&gt;n\)</span>. A counter-example is that the matrix <span class="math inline">\(X=\begin{bmatrix}1 &amp; 0 &amp; 0 \\ 0 &amp; 1 &amp; 0\end{bmatrix}\)</span> has <span class="math inline">\(rank=2\)</span>, which satisify that <span class="math inline">\(rank(X)=min(2,3)=2\)</span>. Therefore, not all matrix of full rank is square.</p>
 </div>
 <div id="d-every-square-matrix-is-of-full-rank." class="section level4">
@@ -265,10 +266,42 @@ projection(v, u)</code></pre>
 </div>
 <div id="problem-7" class="section level2">
 <h2>Problem 7</h2>
-<pre class="r"><code>x = c(1, 2, 3)
+<pre class="r"><code>vnorm = function(x) {
+  return(sqrt(t(x)%*%x))
+}
+
+x = c(1, 2, 3)
 y = c(3, 0, 2)
 z = c(3, 1, 1)
-# Start by setting u1 = x, and report the set of vectors uk and the orthonormalized vectors ek, for k = 1,2,3.</code></pre>
+# Start by setting u1 = x, and report the set of vectors uk and the orthonormalized vectors uk, for k = 1,2,3.
+u1 = x
+u1</code></pre>
+<pre><code>## [1] 1 2 3</code></pre>
+<pre class="r"><code>u2 = y - projection(y, u1)
+u2</code></pre>
+<pre><code>## [1]  2.35714286 -1.28571429  0.07142857</code></pre>
+<pre class="r"><code>u3 = z - projection(z, u1) - projection(z, u2)
+u3</code></pre>
+<pre><code>## [1]  0.5148515  0.9009901 -0.7722772</code></pre>
+<pre class="r"><code>e1 = u1 / vnorm(u1)
+e1</code></pre>
+<pre><code>## [1] 0.2672612 0.5345225 0.8017837</code></pre>
+<pre class="r"><code>e2 = u2 / vnorm(u2)
+e2</code></pre>
+<pre><code>## [1]  0.87758509 -0.47868278  0.02659349</code></pre>
+<pre class="r"><code>e3 = u3 / vnorm(u3)
+e3</code></pre>
+<pre><code>## [1]  0.3980149  0.6965260 -0.5970223</code></pre>
+<pre class="r"><code># check 
+vnorm(e1)</code></pre>
+<pre><code>##      [,1]
+## [1,]    1</code></pre>
+<pre class="r"><code>vnorm(e2)</code></pre>
+<pre><code>##      [,1]
+## [1,]    1</code></pre>
+<pre class="r"><code>vnorm(e3)</code></pre>
+<pre><code>##      [,1]
+## [1,]    1</code></pre>
 </div>
 <div id="problem-8" class="section level2">
 <h2>Problem 8</h2>
@@ -342,11 +375,28 @@ lp_norm(u, &quot;max&quot;)</code></pre>
 </div>
 <div id="problem-10" class="section level2">
 <h2>Problem 10</h2>
+<p>Consider the eigendecomposition of a square matrix <span class="math inline">\(A\)</span>.</p>
+<p>Since A is a symmetric matrix, we can do eigendecomposition on matrix <span class="math inline">\(A\)</span>. Here, I denote the orthonormal basis of eigenvectors as <span class="math inline">\(q_1, \dots, q_n\)</span> and their corresponding eigenvalues <span class="math inline">\(\lambda_1, \dots, \lambda_n\)</span>. By eigendecomposition, <span class="math display">\[A = U\Lambda U^T\]</span> where <span class="math inline">\(U\)</span> is a orthogonal matrix with <span class="math inline">\(q_1, \dots, q_n\)</span> as its columns and <span class="math inline">\(\Lambda\)</span> is a diagonal matrix <span class="math inline">\(diag(\lambda_1, \dots, \lambda_n)\)</span>. Since by definition <span class="math inline">\(Aq_i = \lambda_i q_i\)</span> for every i, for every column <code>q_i</code> of <span class="math inline">\(U\)</span>, i.e., eigenvectors of <span class="math inline">\(U\)</span> which corresponding to a eigenvalues <span class="math inline">\(\lambda_i\)</span> in <span class="math inline">\(\Lambda\)</span>.</p>
+<p><span class="math inline">\(U = \begin{bmatrix} \vert &amp; &amp; \vert \\ q_1 &amp; \dots &amp; q_n \\ \vert &amp; &amp; \vert \end{bmatrix}, \text{where } q_i \text{ is the i column vector of U}, \Lambda = \begin{bmatrix} \lambda_{1} &amp; &amp; 0\\ &amp; \ddots &amp; \\0 &amp; &amp; \lambda_{n}\end{bmatrix}\)</span>.</p>
+<div id="a.-prove-that-the-matrix-ba-where-b-is-an-arbitrary-scalar-has-blambda-as-an-eigenvalue-with-v-as-the-associated-eigenvector." class="section level3">
+<h3>a. Prove that the matrix <span class="math inline">\(bA\)</span>, where <span class="math inline">\(b\)</span> is an arbitrary scalar, has <span class="math inline">\(b\lambda\)</span> as an eigenvalue, with <span class="math inline">\(v\)</span> as the associated eigenvector.</h3>
+<p>By the definition of eigenvalues and eigenvectors, <span class="math display">\[A\vec{q_i}=\lambda_i \vec{q_i}\]</span> Then, multiple both sides by scalar <span class="math inline">\(b\)</span>, <span class="math display">\[bA\vec{q_i}=k\lambda_i\vec{q_i} \\ \Rightarrow (bA)\vec{q_i}=(k\lambda_i)\vec{q_i}\]</span></p>
+<p>Again, by definition of eigenvalues and eigenvectors, for matrix <span class="math inline">\(bA\)</span>, <span class="math inline">\(\vec{q}\)</span> and <span class="math inline">\(k\lambda\)</span> are the corresponding eigenvectors and eigenvalues.</p>
+<p>We can also use eigendecomposition of A to prove. <span class="math display">\[A=U\Lambda U^T\]</span> <span class="math display">\[bA=b(U\Lambda U^T)=(U)(b\Lambda)(U^T)\]</span></p>
+<p>where <span class="math inline">\(b\Lambda = \begin{bmatrix} b\lambda_{1} &amp; &amp; 0\\ &amp; \ddots &amp; \\0 &amp; &amp; b\lambda_{n}\end{bmatrix}\)</span>.</p>
+<p>Therefore, by eigendecomposition, the matrix <span class="math inline">\(bA\)</span> has <span class="math inline">\(\vec{q}\)</span> as an eigenvector and <span class="math inline">\(b\lambda\)</span> as an eigenvalue.</p>
+</div>
+<div id="b.-prove-that-the-matrix-aci-where-c-is-an-arbitrary-scalar-has-lambdac-as-an-eigenvalue-with-v-as-the-associated-eigenvector." class="section level3">
+<h3>b. Prove that the matrix <span class="math inline">\(A+cI\)</span>, where <span class="math inline">\(c\)</span> is an arbitrary scalar, has <span class="math inline">\((\lambda+c)\)</span> as an eigenvalue, with <span class="math inline">\(v\)</span> as the associated eigenvector.</h3>
+<p>By the definition of eigenvalues and eigenvectors, <span class="math display">\[A\vec{q_i}=\lambda_i \vec{q_i}\]</span> Here, let <span class="math inline">\(A' = A+cI\)</span> and plug in, <span class="math display">\[(A+cI)\vec{q_i}=A\vec{q_i}+cI\vec{q_i} \\ =\lambda_i \vec{q_i} + c\vec{q_i}\text{ (since } A\vec{q_i} = \lambda_i \vec{q_i} \text{ )} \\ = (\lambda_i+c) \vec{q_i} \text{ (since } c, \lambda_i \text{ are both scalar value)}\]</span></p>
+<p>Therefore, <span class="math display">\[A'\vec{q_i} = (\lambda_i+c)\vec{q_i}\]</span> Again, by the definition of eigenvalues and eigenvectors, the matrix <span class="math inline">\(A'=A+cI\)</span> has <span class="math inline">\(vec{q_i}\)</span> as an eigenvector and <span class="math inline">\((\lambda_i+c)\)</span> as an eigenvalues.</p>
+</div>
 </div>
 <div id="problem-11" class="section level2">
 <h2>Problem 11</h2>
 <div id="a-2" class="section level3">
 <h3>(a)</h3>
+<p>Select the first five columns of state.x77 and convert them as a matrix; this will be the data matrix X. Let <span class="math inline">\(n\)</span> be the number of rows of <span class="math inline">\(X\)</span>, and <span class="math inline">\(p\)</span> the number of columns of <span class="math inline">\(X\)</span>.</p>
 <pre class="r"><code>head(state.x77, 5)</code></pre>
 <pre><code>##            Population Income Illiteracy Life Exp Murder HS Grad Frost
 ## Alabama          3615   3624        2.1    69.05   15.1    41.3    20
@@ -379,6 +429,7 @@ p</code></pre>
 </div>
 <div id="b-2" class="section level3">
 <h3>(b)</h3>
+<p>Create a diagonal matrix <span class="math inline">\(D = \frac{1}{n}I\)</span> where <span class="math inline">\(I\)</span> is the <span class="math inline">\(n x n\)</span> identity matrix. Display the output of <span class="math inline">\(sum(diag(D))\)</span>.</p>
 <pre class="r"><code>D = diag(1, n)/n
 D</code></pre>
 <pre><code>##      [,1] [,2] [,3] [,4] [,5]
@@ -392,6 +443,7 @@ D</code></pre>
 </div>
 <div id="c-2" class="section level3">
 <h3>(c)</h3>
+<p>Compute the vector of column means <span class="math inline">\(g = X^TD1\)</span> where <span class="math inline">\(1\)</span> is a vector of 1’s of length <span class="math inline">\(n\)</span>. Display (i.e. print) <span class="math inline">\(g\)</span>.</p>
 <pre class="r"><code>ones = rep(1, n)
 ones</code></pre>
 <pre><code>## [1] 1 1 1 1 1</code></pre>
@@ -409,6 +461,7 @@ g</code></pre>
 </div>
 <div id="d-2" class="section level3">
 <h3>(d)</h3>
+<p>Calculate the mean-centered matrix <span class="math inline">\(X_c=X-1g^T\)</span>. Display the output of <span class="math inline">\(colMeans(Xc)\)</span>.</p>
 <pre class="r"><code>Xc = X - ones%*%t(g)
 Xc</code></pre>
 <pre><code>##       [,1]    [,2]  [,3]   [,4]  [,5]   [,6]  [,7]      [,8]
@@ -423,6 +476,7 @@ Xc</code></pre>
 </div>
 <div id="e-2" class="section level3">
 <h3>(e)</h3>
+<p>Compute the (population) variance-covariance matrix <span class="math inline">\(V=X^TDX-gg^T\)</span>. Display the output of V.</p>
 <pre class="r"><code>V = t(X)%*%D%*%X - g%*%t(g)
 V</code></pre>
 <pre><code>##               [,1]          [,2]         [,3]          [,4]         [,5]
@@ -446,98 +500,46 @@ V</code></pre>
 </div>
 <div id="f-1" class="section level3">
 <h3>(f)</h3>
+<p>Display only the elements in the diagonal of <span class="math inline">\(D_{1/S}\)</span>.</p>
 <pre class="r"><code>diag(V)</code></pre>
 <pre><code>## [1] 5.957034e+07 1.131175e+06 1.216000e-01 9.426240e-01 5.681600e+00
 ## [6] 1.223536e+02 2.711440e+03 3.742685e+10</code></pre>
-<pre class="r"><code>D_1S = diag(1/diag(V))
+<pre class="r"><code>D_1S = 1/diag(V)
 D_1S</code></pre>
-<pre><code>##              [,1]         [,2]     [,3]     [,4]      [,5]        [,6]
-## [1,] 1.678688e-08 0.000000e+00 0.000000 0.000000 0.0000000 0.000000000
-## [2,] 0.000000e+00 8.840362e-07 0.000000 0.000000 0.0000000 0.000000000
-## [3,] 0.000000e+00 0.000000e+00 8.223684 0.000000 0.0000000 0.000000000
-## [4,] 0.000000e+00 0.000000e+00 0.000000 1.060868 0.0000000 0.000000000
-## [5,] 0.000000e+00 0.000000e+00 0.000000 0.000000 0.1760068 0.000000000
-## [6,] 0.000000e+00 0.000000e+00 0.000000 0.000000 0.0000000 0.008173033
-## [7,] 0.000000e+00 0.000000e+00 0.000000 0.000000 0.0000000 0.000000000
-## [8,] 0.000000e+00 0.000000e+00 0.000000 0.000000 0.0000000 0.000000000
-##              [,7]         [,8]
-## [1,] 0.0000000000 0.000000e+00
-## [2,] 0.0000000000 0.000000e+00
-## [3,] 0.0000000000 0.000000e+00
-## [4,] 0.0000000000 0.000000e+00
-## [5,] 0.0000000000 0.000000e+00
-## [6,] 0.0000000000 0.000000e+00
-## [7,] 0.0003688077 0.000000e+00
-## [8,] 0.0000000000 2.671879e-11</code></pre>
+<pre><code>## [1] 1.678688e-08 8.840362e-07 8.223684e+00 1.060868e+00 1.760068e-01
+## [6] 8.173033e-03 3.688077e-04 2.671879e-11</code></pre>
 </div>
 <div id="g-1" class="section level3">
 <h3>(g)</h3>
+<p>Display the output of <span class="math inline">\(colMeans(Z)\)</span> and <span class="math inline">\(apply(Z, 2, var)\)</span></p>
 <pre class="r"><code>Z = Xc%*%D_1S
 Z</code></pre>
-<pre><code>##               [,1]          [,2]       [,3]       [,4]        [,5]
-## [1,] -3.835802e-05 -8.559239e-04  3.4539474 -1.2794073  0.73570825
-## [2,] -9.291537e-05  1.523018e-03 -1.4802632 -1.0035815  0.06688257
-## [3,] -6.191000e-05 -5.498705e-05  0.9868421  0.3118953 -0.54914109
-## [4,] -6.362227e-05 -1.073397e-03  1.8092105  0.4285908 -0.14432554
-## [5,]  2.568057e-04  4.612901e-04 -4.7697368  1.5425026 -0.10912419
-##             [,6]         [,7]          [,8]
-## [1,] -0.10150907 -0.012686986 -3.662200e-06
-## [2,]  0.10608597  0.035995633  1.011732e-05
-## [3,]  0.03579788 -0.014531024 -1.986692e-06
-## [4,] -0.11295131  0.003909362 -3.629149e-06
-## [5,]  0.07257653 -0.012686986 -8.392799e-07</code></pre>
+<pre><code>##            [,1]
+## [1,]  2.7951543
+## [2,] -2.2734403
+## [3,]  0.7707443
+## [4,]  1.9832932
+## [5,] -3.2757516</code></pre>
 <pre class="r"><code>colMeans(Z)</code></pre>
-<pre><code>## [1]  5.421011e-21  1.734723e-19  6.439294e-16 -3.053113e-15  3.330669e-17
-## [6] -4.718448e-17 -1.387779e-18 -9.740879e-22</code></pre>
+<pre><code>## [1] -2.531308e-15</code></pre>
 <pre class="r"><code>apply(Z, 2, var)</code></pre>
-<pre><code>## [1] 2.098360e-08 1.105045e-06 1.027961e+01 1.326085e+00 2.200084e-01
-## [6] 1.021629e-02 4.610096e-04 3.339849e-11</code></pre>
+<pre><code>## [1] 7.059866</code></pre>
 </div>
 <div id="h" class="section level3">
 <h3>(h)</h3>
+<p>Compute the (population) correlation matrix <span class="math inline">\(R = D_{1/S} VD_{1/S}\)</span>. Display the matrix <span class="math inline">\(R\)</span>.</p>
 <pre class="r"><code>R = D_1S%*%V%*%D_1S
 R</code></pre>
-<pre><code>##               [,1]          [,2]          [,3]          [,4]          [,5]
-## [1,]  1.678688e-08  1.629558e-08 -2.792088e-04  9.837394e-05 -3.855758e-06
-## [2,]  1.629558e-08  8.840362e-07 -1.881456e-03 -3.981082e-05 -7.861412e-05
-## [3,] -2.792088e-04 -1.881456e-03  8.223684e+00 -1.841514e+00  4.319113e-01
-## [4,]  9.837394e-05 -3.981082e-05 -1.841514e+00  1.060868e+00 -2.819696e-01
-## [5,] -3.855758e-06 -7.861412e-05  4.319113e-01 -2.819696e-01  1.760068e-01
-## [6,]  3.528941e-06  8.024137e-05 -2.045678e-01  1.962206e-02 -1.577239e-02
-## [7,] -1.093019e-06  1.128628e-05 -8.771315e-03 -8.463816e-03  3.746758e-04
-## [8,] -1.322442e-10  4.432206e-09 -6.429729e-06 -1.787552e-06 -6.225997e-08
-##               [,6]          [,7]          [,8]
-## [1,]  3.528941e-06 -1.093019e-06 -1.322442e-10
-## [2,]  8.024137e-05  1.128628e-05  4.432206e-09
-## [3,] -2.045678e-01 -8.771315e-03 -6.429729e-06
-## [4,]  1.962206e-02 -8.463816e-03 -1.787552e-06
-## [5,] -1.577239e-02  3.746758e-04 -6.225997e-08
-## [6,]  8.173033e-03  6.447902e-04  3.445876e-07
-## [7,]  6.447902e-04  3.688077e-04  8.719412e-08
-## [8,]  3.445876e-07  8.719412e-08  2.671879e-11</code></pre>
+<pre><code>##          [,1]
+## [1,] 5.647893</code></pre>
 </div>
 <div id="i" class="section level3">
 <h3>(i)</h3>
+<p>Confirm that R can also be obtained as <span class="math inline">\(R = Z^TDZ\)</span>.</p>
 <pre class="r"><code>R = t(Z)%*%D%*%Z
 R</code></pre>
-<pre><code>##               [,1]          [,2]          [,3]          [,4]          [,5]
-## [1,]  1.678688e-08  1.629558e-08 -2.792088e-04  9.837394e-05 -3.855758e-06
-## [2,]  1.629558e-08  8.840362e-07 -1.881456e-03 -3.981082e-05 -7.861412e-05
-## [3,] -2.792088e-04 -1.881456e-03  8.223684e+00 -1.841514e+00  4.319113e-01
-## [4,]  9.837394e-05 -3.981082e-05 -1.841514e+00  1.060868e+00 -2.819696e-01
-## [5,] -3.855758e-06 -7.861412e-05  4.319113e-01 -2.819696e-01  1.760068e-01
-## [6,]  3.528941e-06  8.024137e-05 -2.045678e-01  1.962206e-02 -1.577239e-02
-## [7,] -1.093019e-06  1.128628e-05 -8.771315e-03 -8.463816e-03  3.746758e-04
-## [8,] -1.322442e-10  4.432206e-09 -6.429729e-06 -1.787552e-06 -6.225997e-08
-##               [,6]          [,7]          [,8]
-## [1,]  3.528941e-06 -1.093019e-06 -1.322442e-10
-## [2,]  8.024137e-05  1.128628e-05  4.432206e-09
-## [3,] -2.045678e-01 -8.771315e-03 -6.429729e-06
-## [4,]  1.962206e-02 -8.463816e-03 -1.787552e-06
-## [5,] -1.577239e-02  3.746758e-04 -6.225997e-08
-## [6,]  8.173033e-03  6.447902e-04  3.445876e-07
-## [7,]  6.447902e-04  3.688077e-04  8.719412e-08
-## [8,]  3.445876e-07  8.719412e-08  2.671879e-11</code></pre>
+<pre><code>##          [,1]
+## [1,] 5.647893</code></pre>
 </div>
 </div>
 <div id="comments-and-reflections" class="section level2">

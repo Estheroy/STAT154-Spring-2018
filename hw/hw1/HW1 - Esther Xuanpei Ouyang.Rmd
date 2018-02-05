@@ -3,8 +3,8 @@ title: "HW1 - Esther Xuanpei Ouyang"
 author: "Esther Xuanpei Ouyang"
 date: "1/26/2018"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 subtitle: STAT 154 Lab 101
 ---
 
@@ -75,7 +75,7 @@ By the definition of orthogonal matrix, for orthogonal matrix $Q$, the product o
 False.
 
 By the definition of orthogonal matrix, for for orthogonal matrix $Q$, $Q^TQ=QQ^T= I$.
-A counter-example is that the nonsingular matrix $\begin{bmatrix} \end{bmatrix}$
+A counter-example is that the nonsingular matrix A is not orthogonal
 Therefore, not all nonsingular matrix is orthogonal.
 
 
@@ -166,6 +166,11 @@ e2 = u2 / vnorm(u2)
 e2
 e3 = u3 / vnorm(u3)
 e3
+
+# check 
+vnorm(e1)
+vnorm(e2)
+vnorm(e3)
 ```
 ## Problem 8
 ```{r}

@@ -641,12 +641,12 @@ for (k in 1:4) {
 </div>
 <div id="description-of-power-method" class="section level2">
 <h2>Description of Power Method</h2>
-<pre class="r"><code>A = matrix(c(5, -14, 11, -4, 4, -4, 3, 6, -3), nrow = 3, ncol = 3)
+<pre class="r"><code>A = matrix(c(5, -14, 11, -4, 4, -4, 3, 6, -3), nrow = 3, ncol = 3, byrow = TRUE)
 A</code></pre>
 <pre><code>##      [,1] [,2] [,3]
-## [1,]    5   -4    3
-## [2,]  -14    4    6
-## [3,]   11   -4   -3</code></pre>
+## [1,]    5  -14   11
+## [2,]   -4    4   -4
+## [3,]    3    6   -3</code></pre>
 <pre class="r"><code>lp_norm = function(x, p = 1) {
   if (p == &quot;max&quot;) {
     return(max(abs(x)))
@@ -664,7 +664,7 @@ power = function(A, p) {
   prev_w = rep(1, n) 
   curr_w = rep(1, n)
   prev_s = 0
-  curr_s = 1
+  curr_s = lp_norm(curr_w, p)
   while (abs(prev_s - curr_s) &gt; 0.01) {
     prev_s = curr_s
     prev_w = curr_w
@@ -682,33 +682,33 @@ p_vector = p_eigen$p_vector
 eigen_A = eigen(A)
 # compare eigenvalues
 p_value</code></pre>
-<pre><code>## [1] 12</code></pre>
+<pre><code>## [1] 11.99341</code></pre>
 <pre class="r"><code>eigen_A$values</code></pre>
-<pre><code>## [1]  1.200000e+01 -6.000000e+00  3.300288e-16</code></pre>
+<pre><code>## [1]  1.200000e+01 -6.000000e+00  4.930713e-16</code></pre>
 <pre class="r"><code>domninant_eigenvalue = eigen_A$values[1]
 domninant_eigenvalue</code></pre>
 <pre><code>## [1] 12</code></pre>
 <pre class="r"><code># compare eigenvectors
 p_vector</code></pre>
-<pre><code>##      [,1]
-## [1,]    1
-## [2,]   -1
-## [3,]    1</code></pre>
+<pre><code>##              [,1]
+## [1,]  1.000000000
+## [2,] -0.500091570
+## [3,]  0.000183139</code></pre>
 <pre class="r"><code>eigen_A$vectors</code></pre>
-<pre><code>##            [,1]       [,2]      [,3]
-## [1,] -0.5773503  0.4082483 0.4082483
-## [2,]  0.5773503  0.8164966 0.8164966
-## [3,] -0.5773503 -0.4082483 0.4082483</code></pre>
+<pre><code>##               [,1]          [,2]       [,3]
+## [1,] -8.944272e-01  7.071068e-01 -0.2672612
+## [2,]  4.472136e-01  1.040834e-16  0.5345225
+## [3,] -5.945103e-17 -7.071068e-01  0.8017837</code></pre>
 <pre class="r"><code>domninant_eigenvector = eigen_A$vectors[,1]
 domninant_eigenvector</code></pre>
-<pre><code>## [1] -0.5773503  0.5773503 -0.5773503</code></pre>
+<pre><code>## [1] -8.944272e-01  4.472136e-01 -5.945103e-17</code></pre>
 <pre class="r"><code># Check
 estimate_lambda = (t(p_vector)%*%A%*%p_vector
 )/(t(p_vector)%*%p_vector)
 estimate_lambda</code></pre>
-<pre><code>##      [,1]
-## [1,]   12</code></pre>
-<p>Get the dominant eigenvectors -0.5773503, 0.5773503, -0.5773503 and eigenvalues 12.</p>
+<pre><code>##          [,1]
+## [1,] 12.00264</code></pre>
+<p>Get the dominant eigenvectors -0.8944272, 0.4472136, -5.945102810^{-17} and eigenvalues 12.</p>
 </div>
 <div id="other-scaling-options" class="section level2">
 <h2>Other scaling options</h2>
@@ -718,42 +718,42 @@ p_vector = p_eigen$p_vector
 eigen_A = eigen(A)
 # compare eigenvalues
 p_value</code></pre>
-<pre><code>## [1] 12</code></pre>
+<pre><code>## [1] 11.99473</code></pre>
 <pre class="r"><code>eigen_A$values</code></pre>
-<pre><code>## [1]  1.200000e+01 -6.000000e+00  3.300288e-16</code></pre>
+<pre><code>## [1]  1.200000e+01 -6.000000e+00  4.930713e-16</code></pre>
 <pre class="r"><code>domninant_eigenvalue = eigen_A$values[1]
 domninant_eigenvalue</code></pre>
 <pre><code>## [1] 12</code></pre>
 <pre class="r"><code># compare eigenvectors
 p_vector</code></pre>
-<pre><code>##            [,1]
-## [1,]  0.5773503
-## [2,] -0.5773503
-## [3,]  0.5773503</code></pre>
+<pre><code>##               [,1]
+## [1,]  0.8943944169
+## [2,] -0.4472791077
+## [3,]  0.0001637985</code></pre>
 <pre class="r"><code>eigen_A$vectors</code></pre>
-<pre><code>##            [,1]       [,2]      [,3]
-## [1,] -0.5773503  0.4082483 0.4082483
-## [2,]  0.5773503  0.8164966 0.8164966
-## [3,] -0.5773503 -0.4082483 0.4082483</code></pre>
+<pre><code>##               [,1]          [,2]       [,3]
+## [1,] -8.944272e-01  7.071068e-01 -0.2672612
+## [2,]  4.472136e-01  1.040834e-16  0.5345225
+## [3,] -5.945103e-17 -7.071068e-01  0.8017837</code></pre>
 <pre class="r"><code>domninant_eigenvector = eigen_A$vectors[,1]
 domninant_eigenvector</code></pre>
-<pre><code>## [1] -0.5773503  0.5773503 -0.5773503</code></pre>
+<pre><code>## [1] -8.944272e-01  4.472136e-01 -5.945103e-17</code></pre>
 <pre class="r"><code># Check
 estimate_lambda = (t(p_vector)%*%A%*%p_vector
 )/(t(p_vector)%*%p_vector)
 estimate_lambda</code></pre>
-<pre><code>##      [,1]
-## [1,]   12</code></pre>
-<p>Yes, still get the same dominant eigenvectors -0.5773503, 0.5773503, -0.5773503 and eigenvalues 12.</p>
+<pre><code>##          [,1]
+## [1,] 12.00264</code></pre>
+<p>Yes, still get the same dominant eigenvectors 0.8943944, -0.4472791, 1.63798510^{-4} and eigenvalues 11.9947275.</p>
 </div>
 <div id="deflation-and-more-eigenvectors" class="section level2">
 <h2>Deflation and more eigenvectors</h2>
 <pre class="r"><code>A_1 = A - domninant_eigenvalue*domninant_eigenvector%*%t(domninant_eigenvector)
 A_1</code></pre>
-<pre><code>##      [,1]          [,2] [,3]
-## [1,]    1  2.664535e-15   -1
-## [2,]  -10 -2.664535e-15   10
-## [3,]    7  8.881784e-16   -7</code></pre>
+<pre><code>##      [,1] [,2] [,3]
+## [1,] -4.6 -9.2   11
+## [2,]  0.8  1.6   -4
+## [3,]  3.0  6.0   -3</code></pre>
 <pre class="r"><code>p_eigen = power(A_1, 2)
 p_value = p_eigen$p_value
 p_vector = p_eigen$p_vector
@@ -763,35 +763,31 @@ eigen_A = eigen(A_1)
 p_value</code></pre>
 <pre><code>## [1] 6</code></pre>
 <pre class="r"><code>eigen_A$values</code></pre>
-<pre><code>## [1] -6.000e+00+0.00000e+00i -5.024e-15+9.39322e-12i -5.024e-15-9.39322e-12i</code></pre>
+<pre><code>## [1] -6+0.000000000000i  0+0.000000183473i  0-0.000000183473i</code></pre>
 <pre class="r"><code>domninant_eigenvalue = eigen_A$values[1]
 domninant_eigenvalue</code></pre>
 <pre><code>## [1] -6+0i</code></pre>
 <pre class="r"><code># compare eigenvectors
 p_vector</code></pre>
-<pre><code>##             [,1]
-## [1,]  0.08164966
-## [2,] -0.81649658
-## [3,]  0.57154761</code></pre>
+<pre><code>##            [,1]
+## [1,] -0.8970852
+## [2,]  0.2760262
+## [3,]  0.3450328</code></pre>
 <pre class="r"><code>eigen_A$vectors</code></pre>
-<pre><code>##                [,1]                        [,2]
-## [1,]  0.08164966+0i -2.016639e-08-3.151842e-04i
-## [2,] -0.81649658+0i  9.999999e-01+0.000000e+00i
-## [3,]  0.57154761+0i -2.016639e-08-3.151842e-04i
-##                             [,3]
-## [1,] -2.016639e-08+3.151842e-04i
-## [2,]  9.999999e-01+0.000000e+00i
-## [3,] -2.016639e-08+3.151842e-04i</code></pre>
+<pre><code>##               [,1]                        [,2]                        [,3]
+## [1,]  0.8970852+0i  8.944272e-01+0.000000e+00i  8.944272e-01+0.000000e+00i
+## [2,] -0.2760262+0i -4.472136e-01+0.000000e+00i -4.472136e-01-0.000000e+00i
+## [3,] -0.3450328+0i  0.000000e+00+2.564114e-08i  0.000000e+00-2.564114e-08i</code></pre>
 <pre class="r"><code>domninant_eigenvector = eigen_A$vectors[,1]
 domninant_eigenvector</code></pre>
-<pre><code>## [1]  0.08164966+0i -0.81649658+0i  0.57154761+0i</code></pre>
+<pre><code>## [1]  0.8970852+0i -0.2760262+0i -0.3450328+0i</code></pre>
 <pre class="r"><code># Check
 estimate_lambda = (t(p_vector)%*%A_1%*%p_vector
 )/(t(p_vector)%*%p_vector)
 estimate_lambda</code></pre>
 <pre><code>##      [,1]
 ## [1,]   -6</code></pre>
-<p>Get one more dominant eigenvectors 0.081649658403701+0i, -0.816496579373086+0i, 0.571547608825904+0i and eigenvalues -5.99999999999999+0i.</p>
+<p>Get one more dominant eigenvectors -0.8970852, 0.2760262, 0.3450328 and eigenvalues 6.</p>
 </div>
 
 

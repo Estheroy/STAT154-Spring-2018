@@ -137,7 +137,7 @@ for (k in 1:4) {
 
 ## Description of Power Method
 ```{r}
-A = matrix(c(5, -14, 11, -4, 4, -4, 3, 6, -3), nrow = 3, ncol = 3)
+A = matrix(c(5, -14, 11, -4, 4, -4, 3, 6, -3), nrow = 3, ncol = 3, byrow = TRUE)
 A
 
 lp_norm = function(x, p = 1) {
@@ -157,7 +157,7 @@ power = function(A, p) {
   prev_w = rep(1, n) 
   curr_w = rep(1, n)
   prev_s = 0
-  curr_s = 1
+  curr_s = lp_norm(curr_w, p)
   while (abs(prev_s - curr_s) > 0.01) {
     prev_s = curr_s
     prev_w = curr_w
@@ -203,6 +203,7 @@ p_value
 eigen_A$values
 domninant_eigenvalue = eigen_A$values[1]
 domninant_eigenvalue
+
 # compare eigenvectors
 p_vector
 eigen_A$vectors
@@ -215,7 +216,7 @@ estimate_lambda = (t(p_vector)%*%A%*%p_vector
 )/(t(p_vector)%*%p_vector)
 estimate_lambda
 ```
-Yes, still get the same dominant eigenvectors `r domninant_eigenvector` and eigenvalues `r domninant_eigenvalue`.
+Yes, still get the same dominant eigenvectors `r p_vector` and eigenvalues `r p_value`.
 
 ## Deflation and more eigenvectors
 ```{r}
@@ -245,4 +246,4 @@ estimate_lambda = (t(p_vector)%*%A_1%*%p_vector
 )/(t(p_vector)%*%p_vector)
 estimate_lambda
 ```
-Get one more dominant eigenvectors `r domninant_eigenvector` and eigenvalues `r domninant_eigenvalue`.
+Get one more dominant eigenvectors `r p_vector` and eigenvalues `r p_value`.
